@@ -6,6 +6,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from selenium.common.exceptions import TimeoutException, WebDriverException
+
 import csv
 
 import warnings
@@ -69,6 +71,9 @@ def get_bat_stats(player_names, year_ends):
         except TimeoutException:
             bat_stats = ['']*13
             print("Time out occured. Moving on to next")
+        except WebDriverException:
+            bat_stats = ['']*13
+            print("Web driver exception. Moving on to next")
 
         write_list = [player_name, year_end]
         write_list.extend(bat_stats[1:])
@@ -128,6 +133,10 @@ def get_bowl_stats(player_names, year_ends):
         except TimeoutException:
             bowl_stats = ['']*13
             print("Time out occured. Moving on to next")
+        except WebDriverException:
+            bowl_stats = ['']*13
+            print("Time out occured. Moving on to next")
+
         write_list = [player_name, year_end]
         write_list.extend(bowl_stats[1:])
         with open(bowl_file, 'a') as bfile:
@@ -143,4 +152,5 @@ if __name__ == '__main__':
     player_year = pd.read_csv('data/player_year_cut.csv')
     players = player_year.Player.to_list()
     years = player_year.Year.to_list()
-    get_bat_stats(players, years)
+    # get_bat_stats(players, years)
+    get_bowl_stats(players, years)
